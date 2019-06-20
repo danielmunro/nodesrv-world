@@ -1,0 +1,62 @@
+openapi: 3.0.0
+info:
+  title: Nodesrv world api
+  description: This is the world api. Set and get mob rooms.
+  version: 0.0.1
+paths:
+  /mob/{uuid}:
+    get:
+      operationId: getMob
+      parameters:
+        - name: uuid
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '200':
+          description: Ok
+    patch:
+      operationId: updateMob
+      parameters:
+        - name: uuid
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schema/Room'
+      responses:
+        '200':
+          description: location updated
+components:
+  schemas:
+    Mob:
+      type: object
+      properties:
+        uuid:
+          type: string
+          format: uuid
+        room:
+          $ref: '#/components/schemas/Room'
+      required:
+        - uuid
+    Room:
+      type: object
+      properties:
+        uuid:
+          type: string
+          format: uuid
+        mobs:
+          type: array
+          items:
+            $ref: '#/components/schemas/Mob'
+      required:
+        - uuid
+        - mobs
