@@ -1,4 +1,4 @@
 export enum Topic {
-  RoomCreate = "room.created",
-  ExitCreate = "exit.created",
+  RoomCreate = "room.create",
+  ExitCreate = "exit.create",
 }

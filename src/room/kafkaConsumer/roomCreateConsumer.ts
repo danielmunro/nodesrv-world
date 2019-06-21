@@ -1,7 +1,6 @@
 import KafkaConsumer from "../../kafka/kafkaConsumer"
 import {Topic} from "../../kafka/topic"
 import RoomService from "../service/roomService"
-import {RoomEntity} from "../entity/roomEntity"
 import roomMapper from "../mapper/roomMapper"
 
 export default class RoomCreateConsumer implements KafkaConsumer {
@@ -13,10 +12,7 @@ export default class RoomCreateConsumer implements KafkaConsumer {
 
   public async consume({ message }: any): Promise<void> {
     const data = JSON.parse(message.value.toString())
-    console.log(data, roomMapper(data))
-    return
-    const roomEntity = new RoomEntity()
+    const roomEntity = roomMapper(data)
     await this.roomService.saveRoom(roomEntity)
-    console.log("createRoom", roomEntity)
   }
 }

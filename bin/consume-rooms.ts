@@ -5,6 +5,8 @@ import KafkaConsumer from "../src/kafka/kafkaConsumer"
 import {RoomEntity} from "../src/room/entity/roomEntity"
 import RoomCreateConsumer from "../src/room/kafkaConsumer/roomCreateConsumer"
 import RoomService from "../src/room/service/roomService"
+import ExitCreateConsumer from "../src/room/kafkaConsumer/exitCreateConsumer"
+import {ExitEntity} from "../src/room/entity/exitEntity"
 
 const kafka = new Kafka({
   clientId: "app",
@@ -23,13 +25,21 @@ async function run() {
   const connection = await getConnection()
   const roomRepository = connection.getRepository(RoomEntity)
   const roomService = new RoomService(roomRepository)
+  const exitRepository = connection.getRepository(ExitEntity)
 
   const consumerInstances = [
     await createConsumerInstance(new RoomCreateConsumer(roomService)),
+    await createConsumerInstance(new ExitCreateConsumer(exitRepository, roomRepository)),
   ]
 
   await Promise.all(consumerInstances.map(async consumerInstance => consumerInstance.consumer.run({
-    eachMessage: message => consumerInstance.kafkaConsumer.consume(message),
+    eachMessage: async message => {
+      try {
+        await consumerInstance.kafkaConsumer.consume(message)
+      } catch (error) {
+        // eh
+      }
+    },
   })))
 }
 
