@@ -1,4 +1,4 @@
-import {Column, Entity, JoinColumn, ManyToOne, OneToOne, PrimaryGeneratedColumn} from "typeorm"
+import {Column, Entity, Generated, JoinColumn, ManyToOne, OneToOne, PrimaryGeneratedColumn} from "typeorm"
 import {Direction} from "../enum/direction"
 import DoorEntity from "./doorEntity"
 import { RoomEntity } from "./roomEntity"
@@ -7,6 +7,10 @@ import { RoomEntity } from "./roomEntity"
 export class ExitEntity {
   @PrimaryGeneratedColumn()
   public id: number
+
+  @Column()
+  @Generated("uuid")
+  public uuid: string
 
   @Column("text")
   public direction: Direction

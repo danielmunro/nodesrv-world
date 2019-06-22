@@ -7,9 +7,10 @@ export default class ExitMapper {
 
   public async map(data: any) {
     const exit = new ExitEntity()
+    exit.uuid = data.uuid
     exit.direction = data.direction
-    const source = await this.roomRepository.findOne({ uuid: data.source.uuid }) as RoomEntity
-    const destination = await this.roomRepository.findOne({ uuid: data.destination.uuid }) as RoomEntity
+    const source = await this.roomRepository.findOne({ uuid: data.source }) as RoomEntity
+    const destination = await this.roomRepository.findOne({ uuid: data.destination }) as RoomEntity
     exit.source = source
     exit.destination = destination
 

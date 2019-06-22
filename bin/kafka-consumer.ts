@@ -7,6 +7,10 @@ import RoomCreateConsumer from "../src/room/kafkaConsumer/roomCreateConsumer"
 import RoomService from "../src/room/service/roomService"
 import ExitCreateConsumer from "../src/room/kafkaConsumer/exitCreateConsumer"
 import {ExitEntity} from "../src/room/entity/exitEntity"
+import MobCreateConsumer from "../src/mob/kafkaConsumer/mobCreateConsumer"
+import {MobEntity} from "../src/mob/entity/mobEntity"
+import MobService from "../src/mob/service/mobService"
+import MobMapper from "../src/mob/mapper/mobMapper"
 
 const kafka = new Kafka({
   clientId: "app",
@@ -26,10 +30,14 @@ async function run() {
   const roomRepository = connection.getRepository(RoomEntity)
   const roomService = new RoomService(roomRepository)
   const exitRepository = connection.getRepository(ExitEntity)
+  const mobRepository = connection.getRepository(MobEntity)
+  const mobService = new MobService(mobRepository)
+  const mobMapper = new MobMapper(roomRepository)
 
   const consumerInstances = [
     await createConsumerInstance(new RoomCreateConsumer(roomService)),
     await createConsumerInstance(new ExitCreateConsumer(exitRepository, roomRepository)),
+    await createConsumerInstance(new MobCreateConsumer(mobService, mobMapper)),
   ]
 
   await Promise.all(consumerInstances.map(async consumerInstance => consumerInstance.consumer.run({

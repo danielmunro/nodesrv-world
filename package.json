@@ -1,7 +1,7 @@
 {
   "scripts": {
     "start": "ts-node bin/start-server.ts",
-    "consume-rooms": "ts-node bin/consume-rooms.ts",
+    "kafka-consumer": "ts-node bin/kafka-consumer.ts",
     "lint": "yarn clean && tslint --project ."
   },
   "devDependencies": {
